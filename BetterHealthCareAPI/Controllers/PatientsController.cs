@@ -53,5 +53,13 @@ namespace BetterHealthCareAPI.Controllers
             if (!success) return NotFound();
             return NoContent();
         }
+
+        [HttpGet("{id}/full")]
+        public async Task<IActionResult> GetPatientWithActions(int id)
+        {
+            var patientDto = await _service.GetPatientWithActionsAsync(id);
+            if (patientDto == null) return NotFound("Patient not found");
+            return Ok(patientDto);
+        }
     }
 }

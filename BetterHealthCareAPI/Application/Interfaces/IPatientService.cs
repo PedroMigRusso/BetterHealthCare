@@ -10,5 +10,6 @@ namespace BetterHealthCareAPI.Application.Interfaces
         Task<int> CreateAsync(PatientDto dto);
         Task<bool> UpdateAsync(int id, PatientDto dto);
         Task<bool> DeleteAsync(int id);
+        Task<PatientDto?> GetPatientWithActionsAsync(int patientId);
     }
 }

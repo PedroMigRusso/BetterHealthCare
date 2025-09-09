@@ -55,5 +55,36 @@ namespace BetterHealthCareAPI.Application
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<PatientDto?> GetPatientWithActionsAsync(int patientId)
+        {
+            var patient = await _context.Patients
+                .Include(p => p.Actions)
+                    .ThenInclude(pa => pa.Procedure) // inclui Procedure
+                .FirstOrDefaultAsync(p => p.Id == patientId);
+
+            if (patient == null) return null;
+
+            var patientDto = new PatientDto
+            {
+                Name = patient.Name,
+                HealthNumber = patient.HealthNumber,
+                DateOfBirth = patient.DateOfBirth,
+                Actions = patient.Actions.Select(pa => new PatientActionDto
+                {
+                    Id = pa.Id,
+                    DateOfProcedure = pa.DateOfProcedure,
+                    FilesId = pa.FilesId,
+                    Procedure = new ProcedureDto
+                    {
+                        Id = pa.Procedure!.Id,
+                        Name = string.IsNullOrEmpty(pa.Procedure.Name) ? string.Empty : pa.Procedure.Name,
+                        Type = string.IsNullOrEmpty(pa.Procedure.Type) ? string.Empty : pa.Procedure.Type
+                    }
+                }).ToList()
+            };
+
+            return patientDto;
+        }
     }
 }
