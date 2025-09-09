@@ -7,7 +7,7 @@ namespace BetterHealthCareAPI.Application.Interfaces
     {
         Task<IEnumerable<MedicalFile>> GetAllAsync();
         Task<MedicalFileDto> GetByIdAsync(int id);
-        Task<int> CreateAsync(MedicalFileDto dto);
+        Task<MedicalFileDto> CreateAsync(MedicalFileDto dto);
         Task<bool> DeleteAsync(int id);
         Task<bool> UpdateAsync(int id, MedicalFileDto dto);
     }

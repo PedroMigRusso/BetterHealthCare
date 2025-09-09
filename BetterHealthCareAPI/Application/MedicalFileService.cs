@@ -30,12 +30,13 @@ namespace BetterHealthCareAPI.Application
             return _mapper.Map<MedicalFileDto>(file);
         }
 
-        public async Task<int> CreateAsync(MedicalFileDto dto)
+        public async Task<MedicalFileDto> CreateAsync(MedicalFileDto dto)
         {
-            var file = _mapper.Map<MedicalFile>(dto);
-            _context.MedicalFiles.Add(file);
+            var entity = _mapper.Map<MedicalFile>(dto);
+            _context.MedicalFiles.Add(entity);
             await _context.SaveChangesAsync();
-            return file.Id;
+
+            return _mapper.Map<MedicalFileDto>(entity);
         }
 
         public async Task<bool> UpdateAsync(int id, MedicalFileDto dto)

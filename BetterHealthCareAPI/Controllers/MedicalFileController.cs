@@ -1,11 +1,13 @@
 ﻿using BetterHealthCareAPI.Application.Dto;
 using BetterHealthCareAPI.Application.Interfaces;
+using BetterHealthCareAPI.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BetterHealthCareAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/files")]
     public class MedicalFileController : ControllerBase // <- use ControllerBase
     {
         private readonly IMedicalFileService _service;
@@ -34,8 +36,9 @@ namespace BetterHealthCareAPI.Controllers
         public async Task<IActionResult> Create([FromBody] MedicalFileDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var id = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, dto);
+
+            var created = await _service.CreateAsync(dto);
+            return Ok(created);
         }
 
         [HttpPut("{id}")]
