@@ -67,6 +67,7 @@ namespace BetterHealthCareAPI.Application
 
             var patientDto = new PatientDto
             {
+                Id = patient.Id,
                 Name = patient.Name,
                 HealthNumber = patient.HealthNumber,
                 DateOfBirth = patient.DateOfBirth,

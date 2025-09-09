@@ -4,6 +4,7 @@ namespace BetterHealthCareAPI.Application.Dto
 {
     public class PatientDto
     {
+        public int Id { get; set; }
         public required string Name { get; set; }
         public required string HealthNumber { get; set; }
         public DateTime DateOfBirth { get; set; }

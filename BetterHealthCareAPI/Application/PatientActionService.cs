@@ -22,9 +22,23 @@ namespace BetterHealthCareAPI.Application
         {
             var actions = await _context.PatientActions
                 .Where(a => a.PatientId == patientId)
+                .Include(a => a.Procedure) // <-- IMPORTANTE
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<PatientActionDto>>(actions);
+            var dto = actions.Select(a => new PatientActionDto
+            {
+                Id = a.Id,
+                DateOfProcedure = a.DateOfProcedure,
+                FilesId = a.FilesId,
+                Procedure = new ProcedureDto
+                {
+                    Id = a.Procedure.Id,
+                    Name = a.Procedure.Name ?? string.Empty,
+                    Type = a.Procedure.Type ?? string.Empty
+                }
+            }).ToList();
+
+            return dto;
         }
 
         public async Task<PatientActionDto?> GetByIdAsync(int patientId, int actionId)
@@ -35,15 +49,33 @@ namespace BetterHealthCareAPI.Application
             return action == null ? null : _mapper.Map<PatientActionDto>(action);
         }
 
-        public async Task<PatientActionDto> CreateAsync(int patientId, PatientActionDto dto)
+        public async Task<PatientActionDto> CreateAsync(int patientId, CreatePatientActionDto dto)
         {
-            var action = _mapper.Map<PatientAction>(dto);
-            action.PatientId = patientId;
+            var entity = new PatientAction
+            {
+                PatientId = patientId,
+                ProcedureId = dto.ProcedureId,
+                DateOfProcedure = dto.DateOfProcedure,
+                FilesId = dto.FilesId ?? new List<int>()
+            };
 
-            _context.PatientActions.Add(action);
+            _context.PatientActions.Add(entity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<PatientActionDto>(action);
+            await _context.Entry(entity).Reference(e => e.Procedure).LoadAsync();
+
+            return new PatientActionDto
+            {
+                Id = entity.Id,
+                DateOfProcedure = entity.DateOfProcedure,
+                FilesId = entity.FilesId,
+                Procedure = new ProcedureDto
+                {
+                    Id = entity.Procedure.Id,
+                    Name = entity.Procedure.Name ?? string.Empty,
+                    Type = entity.Procedure.Type ?? string.Empty
+                }
+            };
         }
 
         public async Task<bool> UpdateAsync(int patientId, int actionId, PatientActionDto dto)

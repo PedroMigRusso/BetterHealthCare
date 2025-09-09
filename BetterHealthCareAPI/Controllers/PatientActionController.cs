@@ -31,9 +31,10 @@ namespace BetterHealthCareAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAction(int patientId, [FromBody] PatientActionDto dto)
+        public async Task<IActionResult> CreateAction(int patientId, [FromBody] CreatePatientActionDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
             var createdAction = await _service.CreateAsync(patientId, dto);
             return CreatedAtAction(nameof(GetActionById), new { patientId, actionId = createdAction.Id }, createdAction);
         }
