@@ -5,7 +5,7 @@ namespace BetterHealthCareAPI.Application.Interfaces
 {
     public interface IPatientService
     {
-        Task<IEnumerable<Patient>> GetAllAsync();
+        Task<IEnumerable<PatientDto>> GetAllAsync();
         Task<PatientDto> GetByIdAsync(int id);
         Task<int> CreateAsync(PatientDto dto);
         Task<bool> UpdateAsync(int id, PatientDto dto);

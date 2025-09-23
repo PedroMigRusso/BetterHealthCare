@@ -5,7 +5,7 @@ namespace BetterHealthCareAPI.Application.Interfaces
 {
     public interface IMedicalFileService
     {
-        Task<IEnumerable<MedicalFile>> GetAllAsync();
+        Task<IEnumerable<MedicalFileDto>> GetAllAsync();
         Task<MedicalFileDto> GetByIdAsync(int id);
         Task<MedicalFileDto> CreateAsync(MedicalFileDto dto);
         Task<bool> DeleteAsync(int id);

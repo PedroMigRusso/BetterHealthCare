@@ -18,10 +18,10 @@ namespace BetterHealthCareAPI.Application
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Procedure>> GetAllAsync()
+        public async Task<IEnumerable<ProcedureDto>> GetAllAsync()
         {
             var procedures = await _context.Procedures.ToListAsync();
-            return procedures;
+            return _mapper.Map<List<ProcedureDto>>(procedures);
         }
 
         public async Task<ProcedureDto?> GetByIdAsync(int id)

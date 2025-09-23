@@ -18,10 +18,10 @@ namespace BetterHealthCareAPI.Application
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<MedicalFile>> GetAllAsync()
+        public async Task<IEnumerable<MedicalFileDto>> GetAllAsync()
         {
             var files = await _context.MedicalFiles.ToListAsync();
-            return files;
+            return _mapper.Map<List<MedicalFileDto>>(files);
         }
 
         public async Task<MedicalFileDto> GetByIdAsync(int id)
