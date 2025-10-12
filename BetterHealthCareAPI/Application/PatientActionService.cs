@@ -44,9 +44,25 @@ namespace BetterHealthCareAPI.Application
         public async Task<PatientActionDto?> GetByIdAsync(int patientId, int actionId)
         {
             var action = await _context.PatientActions
+                .Include(a => a.Procedure) 
                 .FirstOrDefaultAsync(a => a.Id == actionId && a.PatientId == patientId);
 
-            return action == null ? null : _mapper.Map<PatientActionDto>(action);
+            if (action == null)
+                return null;
+
+            return new PatientActionDto
+            {
+                Id = action.Id,
+                DateOfProcedure = action.DateOfProcedure,
+                FilesId = action.FilesId,
+                PatientId = action.PatientId,
+                Procedure = new ProcedureDto
+                {
+                    Id = action.Procedure?.Id ?? 0,
+                    Name = action.Procedure?.Name ?? string.Empty,
+                    Type = action.Procedure?.Type ?? string.Empty
+                }
+            };
         }
 
         public async Task<PatientActionDto> CreateAsync(int patientId, CreatePatientActionDto dto)

@@ -25,10 +25,12 @@ namespace BetterHealthCareAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetFileById(int id)
         {
             var file = await _service.GetByIdAsync(id);
-            if (file == null) return NotFound();
+            if (file == null)
+                return NotFound();
+
             return Ok(file);
         }
 
