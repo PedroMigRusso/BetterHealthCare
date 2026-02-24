@@ -2,6 +2,7 @@
 using BetterHealthCareAPI.Application.Interfaces;
 using BetterHealthCareAPI.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
@@ -10,10 +11,12 @@ namespace BetterHealthCareAPI.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly IPatientService _service;
+        private readonly ILogger<PatientsController> _logger;
 
-        public PatientsController(IPatientService service)
+        public PatientsController(IPatientService service, ILogger<PatientsController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -34,6 +37,12 @@ namespace BetterHealthCareAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PatientDto patient)
         {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Patient create request invalid: {Errors}", ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState);
+            }
+
             var id = await _service.CreateAsync(patient);
             return CreatedAtAction(nameof(GetById), new { id }, patient);
         }
@@ -41,6 +50,12 @@ namespace BetterHealthCareAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PatientDto patient)
         {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Patient update request invalid for id {Id}: {Errors}", id, ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState);
+            }
+
             var success = await _service.UpdateAsync(id, patient);
             if (!success) return NotFound();
             return NoContent();
