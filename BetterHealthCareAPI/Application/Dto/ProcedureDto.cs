@@ -1,9 +1,17 @@
-﻿namespace BetterHealthCareAPI.Application.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BetterHealthCareAPI.Application.Dto
 {
     public class ProcedureDto
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string Type { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Name { get; set; } = null!;
+
+        [Required]
+        [StringLength(50)]
+        public string Type { get; set; } = null!;
     }
-}
+} 

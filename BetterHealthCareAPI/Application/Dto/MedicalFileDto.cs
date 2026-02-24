@@ -1,9 +1,15 @@
-﻿namespace BetterHealthCareAPI.Application.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BetterHealthCareAPI.Application.Dto
 {
     public class MedicalFileDto
     {
         public int Id { get; set; }
+
+        [Required]
         public string FileName { get; set; } = null!;
-        public required string Base64 { get; set; }
+
+        [Required]
+        public string Base64 { get; set; } = null!;
     }
-}
+} 

@@ -132,12 +132,22 @@ Relationships are designed to preserve historical integrity while remaining flex
 
 ## 🛠️ Technical Stack
 - ASP.NET Core
-
 - RESTful API design
-
 - Entity Framework Core
-
 - SQL Database
-
 - DTO-based architecture
+
+## 🏗️ Recent Improvements
+This repository has been refactored to emphasize maintainability and testability:
+
+* **Repository pattern** with `IRepository<T>` and a generic `Repository<T>` implementation.
+* **Service registration extensions** (`AddInfrastructure`, `AddApplicationServices`) keep `Program.cs` clean.
+* **Global exception middleware** returns consistent JSON errors.
+* **Data annotations & model validation** on DTOs with controller checks.
+* **Logging** added to controllers and services using `ILogger<T>`.
+* **CORS policy** configured for cross‑origin clients.
+* **DTO validation attributes** enforce required fields and string lengths.
+
+These changes make the codebase easier to extend, test, and run in production-like environments.
+
 

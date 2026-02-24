@@ -3,6 +3,7 @@ using BetterHealthCareAPI.Application.Interfaces;
 using BetterHealthCareAPI.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
@@ -11,10 +12,12 @@ namespace BetterHealthCareAPI.Controllers
     public class MedicalFileController : ControllerBase // <- use ControllerBase
     {
         private readonly IMedicalFileService _service;
+        private readonly ILogger<MedicalFileController> _logger;
 
-        public MedicalFileController(IMedicalFileService service)
+        public MedicalFileController(IMedicalFileService service, ILogger<MedicalFileController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -37,7 +40,11 @@ namespace BetterHealthCareAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MedicalFileDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Medical file create invalid: {Errors}", ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState);
+            }
 
             var created = await _service.CreateAsync(dto);
             return Ok(created);
@@ -46,7 +53,11 @@ namespace BetterHealthCareAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] MedicalFileDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Medical file update invalid for id {Id}: {Errors}", id, ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState);
+            }
             var updated = await _service.UpdateAsync(id, dto);
             if (!updated) return NotFound();
             return NoContent();

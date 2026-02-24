@@ -1,6 +1,7 @@
 ﻿using BetterHealthCareAPI.Application.Dto;
 using BetterHealthCareAPI.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
@@ -9,10 +10,12 @@ namespace BetterHealthCareAPI.Controllers
     public class PatientActionController : ControllerBase
     {
         private readonly IPatientActionService _service;
+        private readonly ILogger<PatientActionController> _logger;
 
-        public PatientActionController(IPatientActionService service)
+        public PatientActionController(IPatientActionService service, ILogger<PatientActionController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -33,7 +36,11 @@ namespace BetterHealthCareAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAction(int patientId, [FromBody] CreatePatientActionDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Create patient action invalid for patient {PatientId}: {Errors}", patientId, ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState);
+            }
 
             var createdAction = await _service.CreateAsync(patientId, dto);
             return CreatedAtAction(nameof(GetActionById), new { patientId, actionId = createdAction.Id }, createdAction);
@@ -42,6 +49,12 @@ namespace BetterHealthCareAPI.Controllers
         [HttpPut("{actionId}")]
         public async Task<IActionResult> UpdateAction(int patientId, int actionId, [FromBody] PatientActionDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Update patient action invalid for patient {PatientId} action {ActionId}: {Errors}", patientId, actionId, ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState);
+            }
+
             var updated = await _service.UpdateAsync(patientId, actionId, dto);
             if (!updated) return NotFound();
             return NoContent();
