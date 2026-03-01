@@ -18,6 +18,8 @@ namespace BetterHealthCareAPI.Application.Dto
         [Required]
         public DateTime DateOfBirth { get; set; }
 
+        public DateTime DateOfCreation { get; set; }
+
         public ICollection<PatientActionDto> Actions { get; set; } = new List<PatientActionDto>();
     }
 } 
