@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
+    /// <summary>
+    /// Patient action/procedure management endpoints
+    /// </summary>
     [ApiController]
     [Route("api/patients/{patientId}/actions")]
     public class PatientActionController : ControllerBase
@@ -18,6 +21,11 @@ namespace BetterHealthCareAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all actions for a specific patient
+        /// </summary>
+        /// <param name="patientId">Patient ID</param>
+        /// <returns>List of all actions for the patient</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllActionsForPatient(int patientId)
         {
@@ -25,6 +33,12 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(actions);
         }
 
+        /// <summary>
+        /// Retrieves a specific action for a patient
+        /// </summary>
+        /// <param name="patientId">Patient ID</param>
+        /// <param name="actionId">Action ID</param>
+        /// <returns>Action details or NotFound</returns>
         [HttpGet("{actionId}")]
         public async Task<IActionResult> GetActionById(int patientId, int actionId)
         {
@@ -33,6 +47,12 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(action);
         }
 
+        /// <summary>
+        /// Creates a new action/procedure for a patient
+        /// </summary>
+        /// <param name="patientId">Patient ID</param>
+        /// <param name="dto">Action data to create</param>
+        /// <returns>Created action with new ID</returns>
         [HttpPost]
         public async Task<IActionResult> CreateAction(int patientId, [FromBody] CreatePatientActionDto dto)
         {
@@ -46,6 +66,13 @@ namespace BetterHealthCareAPI.Controllers
             return CreatedAtAction(nameof(GetActionById), new { patientId, actionId = createdAction.Id }, createdAction);
         }
 
+        /// <summary>
+        /// Updates an existing action for a patient
+        /// </summary>
+        /// <param name="patientId">Patient ID</param>
+        /// <param name="actionId">Action ID to update</param>
+        /// <param name="dto">Updated action data</param>
+        /// <returns>NoContent if successful, NotFound if action doesn't exist</returns>
         [HttpPut("{actionId}")]
         public async Task<IActionResult> UpdateAction(int patientId, int actionId, [FromBody] PatientActionDto dto)
         {
@@ -60,6 +87,12 @@ namespace BetterHealthCareAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes an action for a patient
+        /// </summary>
+        /// <param name="patientId">Patient ID</param>
+        /// <param name="actionId">Action ID to delete</param>
+        /// <returns>NoContent if successful, NotFound if action doesn't exist</returns>
         [HttpDelete("{actionId}")]
         public async Task<IActionResult> DeleteAction(int patientId, int actionId)
         {

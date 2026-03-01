@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
+    /// <summary>
+    /// Patient management endpoints
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PatientsController : ControllerBase
@@ -19,6 +22,10 @@ namespace BetterHealthCareAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all patients
+        /// </summary>
+        /// <returns>List of all patients</returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -26,6 +33,11 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(patients);
         }
 
+        /// <summary>
+        /// Retrieves a specific patient by ID
+        /// </summary>
+        /// <param name="id">The patient ID</param>
+        /// <returns>Patient details or NotFound if patient doesn't exist</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -34,6 +46,11 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(patient);
         }
 
+        /// <summary>
+        /// Creates a new patient
+        /// </summary>
+        /// <param name="patient">Patient data to create</param>
+        /// <returns>Created patient with new ID</returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PatientDto patient)
         {
@@ -47,6 +64,12 @@ namespace BetterHealthCareAPI.Controllers
             return CreatedAtAction(nameof(GetById), new { id }, patient);
         }
 
+        /// <summary>
+        /// Updates an existing patient
+        /// </summary>
+        /// <param name="id">Patient ID to update</param>
+        /// <param name="patient">Updated patient data</param>
+        /// <returns>NoContent if successful, NotFound if patient doesn't exist</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PatientDto patient)
         {
@@ -61,6 +84,11 @@ namespace BetterHealthCareAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a patient
+        /// </summary>
+        /// <param name="id">Patient ID to delete</param>
+        /// <returns>NoContent if successful, NotFound if patient doesn't exist</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -69,6 +97,11 @@ namespace BetterHealthCareAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Retrieves a patient with all associated actions/procedures
+        /// </summary>
+        /// <param name="id">Patient ID</param>
+        /// <returns>Patient details including all associated actions</returns>
         [HttpGet("{id}/full")]
         public async Task<IActionResult> GetPatientWithActions(int id)
         {

@@ -7,9 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
+    /// <summary>
+    /// Medical file management endpoints
+    /// </summary>
     [ApiController]
     [Route("api/files")]
-    public class MedicalFileController : ControllerBase // <- use ControllerBase
+    public class MedicalFileController : ControllerBase
     {
         private readonly IMedicalFileService _service;
         private readonly ILogger<MedicalFileController> _logger;
@@ -20,6 +23,10 @@ namespace BetterHealthCareAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all medical files
+        /// </summary>
+        /// <returns>List of all medical files</returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -27,6 +34,11 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(files);
         }
 
+        /// <summary>
+        /// Retrieves a specific medical file by ID
+        /// </summary>
+        /// <param name="id">Medical file ID</param>
+        /// <returns>Medical file details or NotFound</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFileById(int id)
         {
@@ -37,6 +49,11 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(file);
         }
 
+        /// <summary>
+        /// Creates a new medical file
+        /// </summary>
+        /// <param name="dto">Medical file data to create</param>
+        /// <returns>Created medical file</returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MedicalFileDto dto)
         {
@@ -50,6 +67,12 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(created);
         }
 
+        /// <summary>
+        /// Updates an existing medical file
+        /// </summary>
+        /// <param name="id">Medical file ID to update</param>
+        /// <param name="dto">Updated medical file data</param>
+        /// <returns>NoContent if successful, NotFound if file doesn't exist</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] MedicalFileDto dto)
         {
@@ -63,6 +86,11 @@ namespace BetterHealthCareAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a medical file
+        /// </summary>
+        /// <param name="id">Medical file ID to delete</param>
+        /// <returns>NoContent if successful, NotFound if file doesn't exist</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

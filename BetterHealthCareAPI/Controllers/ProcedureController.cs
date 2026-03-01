@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace BetterHealthCareAPI.Controllers
 {
+    /// <summary>
+    /// Procedure/Treatment management endpoints
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class ProcedureController : ControllerBase
@@ -18,6 +21,10 @@ namespace BetterHealthCareAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all procedures
+        /// </summary>
+        /// <returns>List of all procedures</returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -25,6 +32,11 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(procedures);
         }
 
+        /// <summary>
+        /// Retrieves a specific procedure by ID
+        /// </summary>
+        /// <param name="id">Procedure ID</param>
+        /// <returns>Procedure details or NotFound</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -33,6 +45,11 @@ namespace BetterHealthCareAPI.Controllers
             return Ok(procedure);
         }
 
+        /// <summary>
+        /// Creates a new procedure
+        /// </summary>
+        /// <param name="dto">Procedure data to create</param>
+        /// <returns>Created procedure with new ID</returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProcedureDto dto)
         {
@@ -46,6 +63,12 @@ namespace BetterHealthCareAPI.Controllers
             return CreatedAtAction(nameof(GetById), new { id }, dto);
         }
 
+        /// <summary>
+        /// Updates an existing procedure
+        /// </summary>
+        /// <param name="id">Procedure ID to update</param>
+        /// <param name="dto">Updated procedure data</param>
+        /// <returns>NoContent if successful, NotFound if procedure doesn't exist</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ProcedureDto dto)
         {
@@ -60,6 +83,11 @@ namespace BetterHealthCareAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a procedure
+        /// </summary>
+        /// <param name="id">Procedure ID to delete</param>
+        /// <returns>NoContent if successful, NotFound if procedure doesn't exist</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
